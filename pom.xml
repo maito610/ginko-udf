@@ -74,14 +74,22 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
                 <configuration>
-                    <outputDirectory>${project.basedir}/libs</outputDirectory>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -96,19 +104,11 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.linkedin.datafu</groupId>
-                                    <artifactId>datafu</artifactId>
-                                    <version>${datafu.version}</version>
+                                    <groupId>io.en-japan.il</groupId>
+                                    <artifactId>ginko</artifactId>
+                                    <version>${project.version}</version>
                                     <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.basedir}/libs</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.wantedtech</groupId>
-                                    <artifactId>xpresso</artifactId>
-                                    <version>${xpresso.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
+                                    <overWrite>true</overWrite>
                                     <outputDirectory>${project.basedir}/libs</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
