@@ -40,6 +40,11 @@
             <version>${pig.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.linkedin.datafu</groupId>
             <artifactId>datafu</artifactId>
             <version>${datafu.version}</version>
@@ -70,37 +75,14 @@
     </dependencies>
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<version>3.5</version>-->
-                <!--<configuration>-->
-                    <!--<encoding>${project.build.sourceEncoding}</encoding>-->
-                    <!--<source>1.8</source>-->
-                    <!--<target>1.8</target>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<version>2.6</version>-->
-                <!--<configuration>-->
-                    <!--<descriptors>-->
-                        <!--<descriptor>src/main/assembly/jar.xml</descriptor>-->
-                    <!--</descriptors>-->
-                    <!--<finalName>ginko</finalName>-->
-                    <!--<outputDirectory>${project.build.directory}/../..</outputDirectory>-->
-                    <!--<appendAssemblyId>false</appendAssemblyId>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>make-assembly</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>single</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/libs</outputDirectory>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.10</version>
@@ -119,7 +101,7 @@
                                     <version>${datafu.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.basedir}/lib</outputDirectory>
+                                    <outputDirectory>${project.basedir}/libs</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.wantedtech</groupId>
@@ -127,7 +109,7 @@
                                     <version>${xpresso.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.basedir}/lib</outputDirectory>
+                                    <outputDirectory>${project.basedir}/libs</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

@@ -1,9 +1,10 @@
 package io.enjapan.il.ginko;
 
 import com.wantedtech.common.xpresso.strings.FuzzyWuzzy;
-import datafu.pig.util.AliasableEvalFunc;
+import org.apache.pig.EvalFunc;
+import org.apache.pig.PigException;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
-import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,29 +15,53 @@ import java.io.IOException;
  * <p>
  * Created by dumoulma on 1/25/16.
  */
-public class CompanySimilarity extends AliasableEvalFunc<Double> {
+public class CompanySimilarity extends EvalFunc<Double> {
   final Logger logger = LoggerFactory.getLogger(CompanySimilarity.class);
 
   @Override
   public Double exec(Tuple input) throws IOException {
-    //    DataBag lbcRecordBag = getBag(input, "lbc");
-    //    DataBag kestrelRecord = getBag(input, "kestrel");
-    //
-    //    Tuple lbcRecord = lbcRecordBag.iterator().next();
-    //    Double interest = getDouble(interestTuple, getPrefixedAliasName("lbc", "interest_rate"));
-    CompanyRecord a =
-        CompanyRecord.create("MS", "bill", "1234567", "Tokyo", "", "Shinjuku", "Shinjuku", "1-2-3",
-                             "123456", true, 30, 1000000);
-    CompanyRecord b =
-        CompanyRecord.create("MSFT", "bill", "1234567", "Tokyo", "", "Shinjuku", "Shinjuku",
-                             "1-2-3", "123456", true, 30, 1000000);
-    return simScore(a, b);
+    if (input == null || input.size() == 0)
+      return 0.0;
+    if (input.size() != 2) {
+      throw new PigException("Input size must be two! got: " + input.size(),
+                             new IllegalArgumentException());
+    }
+    try {
+      Tuple left = (Tuple) input.get(0);
+      Tuple right = (Tuple) input.get(1);
+
+      CompanyRecord c1 = tupleToCompany(left);
+      CompanyRecord c2 = tupleToCompany(right);
+      double score = simScore(c1, c2);
+      logger.debug("Sim score:{} c1:{} c2:{}", score, c1, c2);
+      return score;
+    } catch (Exception e) {
+      logger.error("Exception thrown while extracting data from input Tuple! \n{}", e.getMessage());
+      return null;
+    }
   }
 
-  @Override
-  public Schema getOutputSchema(Schema schema) {
-    return null;
+  private CompanyRecord tupleToCompany(Tuple tup) throws ExecException {
+    String n = (String) tup.get(0);
+    String rn = (String) tup.get(1);
+    String t = (String) tup.get(2);
+    String p = (String) tup.get(3);
+    String county = (String) tup.get(4);
+    String w = (String) tup.get(5);
+    String city = (String) tup.get(6);
+    String a = (String) tup.get(7);
+    String z = (String) tup.get(8);
+    String u = (String) tup.get(9);
+    int l = ((Integer) tup.get(10)).intValue();
+    int age = ((Integer) tup.get(11)).intValue();
+    int cap = ((Integer) tup.get(12)).intValue();
+    return CompanyRecord.create(n, rn, t, p, county, w, city, a, z, u, l != 0, age, cap);
   }
+
+  //  @Override
+  //  public Schema getOutputSchema(Schema schema) {
+  //    return null;
+  //  }
 
   double simScore(CompanyRecord a, CompanyRecord b) {
     double score = 0.0;
@@ -49,6 +74,7 @@ public class CompanySimilarity extends AliasableEvalFunc<Double> {
     score += stringRatio(a.ward(), b.ward(), true);
     score += stringRatio(a.city(), b.city());
     score += stringRatio(a.address(), b.address());
+    score += stringRatio(a.url(), b.url());
     score += numericalRatio(a.age(), b.age());
     score += numericalRatio(a.capital(), b.capital());
     score += (a.isListed() ^ b.isListed() ? 0.0 : 1.0); // ^ is XOR

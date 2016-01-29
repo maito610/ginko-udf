@@ -1,6 +1,10 @@
 package io.enjapan.il.ginko;
 
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +13,15 @@ import static org.junit.Assert.*;
  */
 public class CompanySimilarityTest {
 
-  @Test
-  public void testExec() throws Exception {
+  private TupleFactory tupleFactory = TupleFactory.getInstance();
 
+  @Test
+  public void testIdentityUDF() throws IOException {
+
+    Tuple input = tupleFactory.newTuple(Arrays.asList("a", "b", "c"));
+    IdentityUDF func = new IdentityUDF();
+    Tuple output = func.exec(input);
+    Assert.assertEquals(input, output);
   }
 
   @Test
@@ -24,3 +34,10 @@ public class CompanySimilarityTest {
 
   }
 }
+
+//CompanyRecord a =
+//    CompanyRecord.create("MS", "bill", "1234567", "Tokyo", "", "Shinjuku", "Shinjuku", "1-2-3",
+//                         "123456", true, 30, 1000000);
+//CompanyRecord b =
+//    CompanyRecord.create("MSFT", "bill", "1234567", "Tokyo", "", "Shinjuku", "Shinjuku",
+//                         "1-2-3", "123456", true, 30, 1000000);

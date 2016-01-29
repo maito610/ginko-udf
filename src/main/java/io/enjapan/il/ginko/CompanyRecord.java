@@ -22,6 +22,8 @@ public abstract class CompanyRecord {
 
   public abstract String zip();
 
+  public abstract String url();
+
   public abstract boolean isListed();
 
   public abstract int age();
@@ -29,8 +31,8 @@ public abstract class CompanyRecord {
   public abstract int capital();
 
   public static CompanyRecord create(String n, String r, String tel, String p, String county,
-                                     String w, String city, String a, String zip, boolean l,
-                                     int age, int capital) {
-    return new AutoValue_CompanyRecord(n, r, tel, p, county, w, city, a, zip, l, age, capital);
+                                     String w, String city, String a, String zip, String url,
+                                     boolean l, int age, int capital) {
+    return new AutoValue_CompanyRecord(n, r, tel, p, county, w, city, a, zip, url, l, age, capital);
   }
 }
