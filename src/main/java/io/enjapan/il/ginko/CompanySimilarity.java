@@ -1,5 +1,6 @@
 package io.enjapan.il.ginko;
 
+import com.google.common.base.Strings;
 import com.wantedtech.common.xpresso.strings.FuzzyWuzzy;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.PigException;
@@ -42,20 +43,30 @@ public class CompanySimilarity extends EvalFunc<Double> {
   }
 
   private CompanyRecord tupleToCompany(Tuple tup) throws ExecException {
-    String n = (String) tup.get(0);
-    String rn = (String) tup.get(1);
-    String t = (String) tup.get(2);
-    String p = (String) tup.get(3);
-    String county = (String) tup.get(4);
-    String w = (String) tup.get(5);
-    String city = (String) tup.get(6);
-    String a = (String) tup.get(7);
-    String z = (String) tup.get(8);
-    String u = (String) tup.get(9);
-    int l = ((Integer) tup.get(10)).intValue();
-    int age = ((Integer) tup.get(11)).intValue();
-    int cap = ((Integer) tup.get(12)).intValue();
-    return CompanyRecord.create(n, rn, t, p, county, w, city, a, z, u, l != 0, age, cap);
+    try {
+      String n = Strings.nullToEmpty((String) tup.get(0));
+      String rn = Strings.nullToEmpty((String) tup.get(1));
+      String t = Strings.nullToEmpty((String) tup.get(2));
+      String p = Strings.nullToEmpty((String) tup.get(3));
+      String county = Strings.nullToEmpty((String) tup.get(4));
+      String w = Strings.nullToEmpty((String) tup.get(5));
+      String city = Strings.nullToEmpty((String) tup.get(6));
+      String a = Strings.nullToEmpty((String) tup.get(7));
+      String z = Strings.nullToEmpty((String) tup.get(8));
+      String u = Strings.nullToEmpty((String) tup.get(9));
+      Integer isL = (Integer) tup.get(10);
+      Integer age = (Integer) tup.get(11);
+      Integer cap = (Integer) tup.get(12);
+      CompanyRecord c =
+          CompanyRecord.create(n, rn, t, p, county, w, city, a, z, u, isL != 0, age, cap);
+      logger.debug("Got: {}", c);
+      return c;
+    } catch (NumberFormatException nfe) {
+      logger.warn("NFE thrown! {} {}", nfe.getCause(), nfe.getMessage(), nfe);
+    } catch (Exception e) {
+      logger.warn("Exception thrown! {} {}", e.getCause(), e.getMessage(), e);
+    }
+    return CompanyRecord.create("", "", "", "", "", "", "", "", "", "", false, 0, 0);
   }
 
   //  @Override
@@ -79,7 +90,9 @@ public class CompanySimilarity extends EvalFunc<Double> {
     score += numericalRatio(a.capital(), b.capital());
     score += (a.isListed() ^ b.isListed() ? 0.0 : 1.0); // ^ is XOR
     score *= 5;
-    logger.info("Score: {} Company a:{} b:{}", score, a, b);
+    logger.debug("Score: {} Company a:{} b:{}", score, a, b);
+    if (score > 100.0)
+      throw new ArithmeticException("Score is greater than 100!?");
     return score;
   }
 
@@ -93,10 +106,18 @@ public class CompanySimilarity extends EvalFunc<Double> {
     return stringRatio(x, y, false);
   }
 
-  double stringRatio(String x, String y, boolean x_y_is_zero) {
+  /**
+   * Computes the fuzzy similarity of two strings as a ratio between 0 and  1;
+   *
+   * @param x
+   * @param y
+   * @param is_empty_match if two empty strings should match as 1 or 0
+   * @return
+   */
+  double stringRatio(String x, String y, boolean is_empty_match) {
     if (x != null || x.isEmpty() || x.equalsIgnoreCase("NA")) {
       if (y != null || y.isEmpty() || y.equalsIgnoreCase("NA")) {
-        return x_y_is_zero ? 0.0 : 1.0;
+        return is_empty_match ? 1.0 : 0.0;
       }
       return 0.0;
     }
