@@ -54,9 +54,9 @@ public class CompanySimilarity extends EvalFunc<Double> {
       String a = Strings.nullToEmpty((String) tup.get(7));
       String z = Strings.nullToEmpty((String) tup.get(8));
       String u = Strings.nullToEmpty((String) tup.get(9));
-      Integer isL = (Integer) tup.get(10);
-      Integer age = (Integer) tup.get(11);
-      Integer cap = (Integer) tup.get(12);
+      Integer isL = (Integer) (tup.get(10) == null ? 0 : tup.get(10));
+      Integer age = (Integer) (tup.get(11) == null ? 0 : tup.get(11));
+      Integer cap = (Integer) (tup.get(12) == null ? 0 : tup.get(12));
       CompanyRecord c =
           CompanyRecord.create(n, rn, t, p, county, w, city, a, z, u, isL != 0, age, cap);
       logger.debug("Got: {}", c);

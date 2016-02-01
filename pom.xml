@@ -70,6 +70,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>java7-hamcrest-matchers</artifactId>
+            <version>0.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.pig</groupId>
             <artifactId>pigunit</artifactId>
             <version>${pig.version}</version>
