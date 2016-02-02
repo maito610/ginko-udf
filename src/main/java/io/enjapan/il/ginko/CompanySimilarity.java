@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Computes the similarity of two records on a 100 point scale.
+ * Pig UDF that computes the similarity of two records on a 100 point scale.
  * <p>
  * Created by dumoulma on 1/25/16.
  */
@@ -69,11 +69,9 @@ public class CompanySimilarity extends EvalFunc<Double> {
     return CompanyRecord.create("", "", "", "", "", "", "", "", "", "", false, 0, 0);
   }
 
-  //  @Override
-  //  public Schema getOutputSchema(Schema schema) {
-  //    return null;
-  //  }
-
+  /**
+   * Scores the degree of similarity of two company records on a scale of 0-100
+   */
   double simScore(CompanyRecord a, CompanyRecord b) {
     double score = 0.0;
     score += stringRatio(a.name(), b.name()) * 5;
@@ -109,10 +107,7 @@ public class CompanySimilarity extends EvalFunc<Double> {
   /**
    * Computes the fuzzy similarity of two strings as a ratio between 0 and  1;
    *
-   * @param x
-   * @param y
    * @param is_empty_match if two empty strings should match as 1 or 0
-   * @return
    */
   double stringRatio(String x, String y, boolean is_empty_match) {
     if (x != null || x.isEmpty() || x.equalsIgnoreCase("NA")) {
