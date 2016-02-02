@@ -11,6 +11,7 @@ import static it.ozimov.cirneco.hamcrest.java7.base.IsBetween.between;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
+ * Unit tests for SimScore
  * Created by dumoulma on 1/25/16.
  */
 public class CompanySimilarityTest {

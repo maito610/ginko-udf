@@ -7,7 +7,7 @@ lbc = LOAD '../data/test/lbc.csv' USING PigStorage(',') as(office_id:long,compan
     company_zip:chararray, prefecture:chararray,county:chararray,city:chararray,ward:chararray,
     address:chararray, is_listed:int,company_age:int,capital:int,emp_count_est:int,sales_est:int,
     income_est:int, office_count:int,name_pref:chararray,name_pref_tel:chararray,
-    locality:chararray);
+    locality:chararray);_
 lbc = FOREACH lbc GENERATE
     office_id,company_name,representative,company_tel,company_zip,
     prefecture,county,ward,city,address,is_listed,company_age,capital,emp_count_est,
