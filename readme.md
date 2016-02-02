@@ -6,10 +6,8 @@
 
 Check if java is installed: `java -version`
 
-If it is not installed:
-```
-http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-```
+If it is not installed go to [Oracle's download page][http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html]
+
 Ubuntu:
 ```
 sudo add-apt-repository ppa:webupd8team/java
@@ -35,7 +33,7 @@ sudo mv /usr/local/opt apache-maven-3.3.9
 sudo ln -s /usr/local/opt/apache-maven-3.3.9 /usr/bin/mvn
 ```
 
-3. Install the XPresso dependency
+3. Install the XPresso dependency from GitHub
 ```
 git clone https://github.com/WantedTechnologies/xpresso
 cd xpresso
@@ -48,7 +46,7 @@ From the project folder:
 mvn clean package
 ```
 
-This will download all dependencies, compile the sources and build the jar and copy it to `libs` folder.
+This will download all dependencies, compile the sources and build the jar and copy it to `/libs` folder.
 
 
 Main dependencies are:
